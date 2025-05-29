@@ -38,7 +38,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
 		if (err || !user) {
 			if (err) {
 				const res: Launcher.Response<null> = {
-					data: err,
+					data: null,
 					code: ClientProhibitError,
 					message: getDescription(ClientProhibitError),
 					dateTime: Date.now(),
