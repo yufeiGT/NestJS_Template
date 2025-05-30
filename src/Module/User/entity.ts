@@ -1,6 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 import { System } from 'src/Entity/index';
+import { ROLE_TYPE } from 'src/Decorators/roles';
 
 /**
  * 用户
@@ -50,4 +51,21 @@ export class User extends System {
 		nullable: true,
 	})
 	lastLoginDate: Date;
+
+	/**
+	 * 用户角色列表
+	 */
+	@Column({
+		type: 'simple-array',
+		nullable: true,
+	})
+	roles: ROLE_TYPE[];
+
+	/**
+	 * 冻结时间
+	 */
+	@Column({
+		nullable: true,
+	})
+	freezeDate: Date;
 }

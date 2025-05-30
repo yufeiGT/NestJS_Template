@@ -13,7 +13,7 @@ const { DB_HOST, DB_PORT, DB_DATABASE, DB_USERNAME, DB_PASSWORD } = process.env;
 			database: DB_DATABASE,
 			username: DB_USERNAME,
 			password: DB_PASSWORD,
-			synchronize: false,
+			synchronize: true,
 			autoLoadEntities: true,
 		}),
 	],

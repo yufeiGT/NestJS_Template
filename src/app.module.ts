@@ -5,8 +5,9 @@ import { CacheModule } from '@nestjs/cache-manager';
 import { HttpModule } from '@nestjs/axios';
 import { JwtModule } from '@nestjs/jwt';
 
-import { JwtAuthGuard } from './Auth/jwt.auth.guards';
+import { JwtAuthGuard } from 'src/Auth/jwt.auth.guards';
 import { JwtStrategy } from 'src/Auth/jwt.strategy';
+import { RolesGuard } from 'src/Guards/roles';
 
 import { DBModule } from './db';
 import { RootModule } from './Module';
@@ -37,6 +38,10 @@ import { AppService } from './app.service';
 		{
 			provide: APP_GUARD,
 			useClass: JwtAuthGuard,
+		},
+		{
+			provide: APP_GUARD,
+			useClass: RolesGuard,
 		},
 		JwtStrategy,
 		AppService,

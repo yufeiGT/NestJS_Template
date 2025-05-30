@@ -14,6 +14,7 @@ export function getUserInfo(user: User): UserInfo {
 		userName: user.userName,
 		nickName: user.nickName || '',
 		picture: user.picture || '',
+		roles: user.roles,
 	};
 }
 

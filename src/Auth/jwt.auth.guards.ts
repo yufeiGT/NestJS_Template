@@ -10,6 +10,9 @@ import { Launcher } from '@~crazy/launcher';
 
 import { IS_PUBLIC_KEY } from './public';
 
+/**
+ * 授权守卫
+ */
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
 	constructor(@Inject(Reflector) private reflector: Reflector) {
@@ -31,19 +34,12 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
 	handleRequest(err, user, info) {
 		const {
 			Success,
-			ClientProhibitError,
 			ClientUnauthorizedError,
 			getDescription,
 		} = Launcher.ResponseCode;
 		if (err || !user) {
 			if (err) {
-				const res: Launcher.Response<null> = {
-					data: null,
-					code: ClientProhibitError,
-					message: getDescription(ClientProhibitError),
-					dateTime: Date.now(),
-				};
-				throw new HttpException(res, Success);
+				throw err;
 			} else {
 				const res: Launcher.Response<null> = {
 					data: null,

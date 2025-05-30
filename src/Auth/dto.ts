@@ -1,3 +1,5 @@
+import { ROLE_TYPE } from 'src/Decorators/roles';
+
 /**
  * 用户授权信息
  */

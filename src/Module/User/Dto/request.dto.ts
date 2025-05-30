@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 /**
  * 登录参数
@@ -69,4 +69,16 @@ export class EditPasswordParamsDto {
 	@IsNotEmpty()
 	@IsString()
 	newPassword: string;
+}
+
+/**
+ * 删除或冻结用户参数
+ */
+export class DeleteOrFreezeUserParamsDto {
+	/**
+	 * 用户ID
+	 */
+	@IsNotEmpty()
+	@IsInt()
+	userId: number;
 }

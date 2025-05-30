@@ -1,9 +1,12 @@
-import { Controller, Post, Body, Req, Put } from '@nestjs/common';
+import { Controller, Post, Body, Req, Put, Get, Delete } from '@nestjs/common';
 import { Request } from 'express';
 import { Public } from 'src/Auth/public';
 
+import { Roles } from 'src/Decorators/roles';
+
 import { UserService } from './services';
 import {
+	DeleteOrFreezeUserParamsDto,
 	EditPasswordParamsDto,
 	LoginParamsDto,
 	RegisterParamsDto,
@@ -30,4 +33,19 @@ export class UserController {
 		return this.userService.editPassword(req.user as any, body);
 	}
 
+	@Delete()
+	@Roles('admin')
+	deleteUser(@Body() body: DeleteOrFreezeUserParamsDto) {
+		return this.userService.deleteUser(body);
+	}
+
+	@Get('/info')
+	getUserInfo(@Req() req: Request) {
+		return this.userService.getUserInfo(req.user as any);
+	}
+
+	@Put('/freeze')
+	freezeUser(@Body() body: DeleteOrFreezeUserParamsDto) {
+		return this.userService.freezeUser(body);
+	}
 }

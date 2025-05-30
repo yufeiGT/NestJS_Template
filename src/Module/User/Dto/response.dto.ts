@@ -1,3 +1,5 @@
+import { ROLE_TYPE } from 'src/Decorators/roles';
+
 /**
  * 用户信息
  */
@@ -18,6 +20,10 @@ export interface UserInfo {
 	 * 用户头像
 	 */
 	picture: string;
+	/**
+	 * 用户角色列表
+	 */
+	roles: ROLE_TYPE[];
 	/**
 	 * 用户令牌
 	 */

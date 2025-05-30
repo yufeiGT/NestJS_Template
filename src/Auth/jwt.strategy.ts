@@ -24,13 +24,25 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 				await this.userService.checkUser(payload.id);
 				return payload;
 			} catch (err) {
-				const res: Launcher.Response<typeof err> = {
-					data: err.response.data,
-					code: ClientProhibitError,
-					message: getDescription(ClientProhibitError),
-					dateTime: Date.now(),
-				};
-				throw new HttpException(res, Success);
+				if (err instanceof HttpException) {
+					throw new HttpException(
+						{
+							data: null,
+							code: err.getStatus(),
+							message: err.message,
+							dateTime: Date.now(),
+						},
+						Success
+					);
+				} else {
+					const res: Launcher.Response<typeof err> = {
+						data: err.response.data || null,
+						code: ClientProhibitError,
+						message: getDescription(ClientProhibitError),
+						dateTime: Date.now(),
+					};
+					throw new HttpException(res, Success);
+				}
 			}
 		} else {
 			const res: Launcher.Response<null> = {

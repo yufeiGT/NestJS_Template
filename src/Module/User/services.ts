@@ -2,7 +2,7 @@ import { Injectable, HttpException, Inject } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { IsNull, Not, Repository } from 'typeorm';
 import { hashSync, compareSync } from 'bcryptjs';
 import { Launcher } from '@~crazy/launcher';
 
@@ -10,6 +10,7 @@ import { UserAuthInfoDto } from 'src/Auth/dto';
 
 import { User } from './entity';
 import {
+	DeleteOrFreezeUserParamsDto,
 	EditPasswordParamsDto,
 	LoginParamsDto,
 	RegisterParamsDto,
@@ -71,6 +72,8 @@ export class UserService {
 			newUser.founderId = 'SYSTEM';
 			newUser.userName = params.username;
 			newUser.password = hashSync(params.password, salt);
+			newUser.lastLoginDate = new Date();
+			newUser.roles = ['user'];
 			if (params.nickName) {
 				newUser.nickName = params.nickName;
 			}
@@ -120,6 +123,62 @@ export class UserService {
 	}
 
 	/**
+	 * 获取用户信息
+	 * @param param0
+	 * @returns
+	 */
+	async getUserInfo({ id }: UserAuthInfoDto) {
+		const user = await this.getUserById(id);
+		if (user) {
+			return getUserInfo(user);
+		} else {
+			userNotExist();
+		}
+	}
+
+	/**
+	 * 删除用户
+	 * @param param0
+	 * @returns
+	 */
+	async deleteUser({ userId }: DeleteOrFreezeUserParamsDto) {
+		const user = await this.getUserById(userId);
+		if (user) {
+			return !!(await this.userRepository.softRemove(user));
+		} else {
+			userNotExist();
+		}
+	}
+
+	/**
+	 * 冻结用户
+	 * @param param0
+	 * @returns
+	 */
+	async freezeUser({ userId }: DeleteOrFreezeUserParamsDto) {
+		const user = await this.getUserById(userId);
+		if (user) {
+			user.freezeDate = new Date();
+			return !!(await this.userRepository.save(user));
+		} else {
+			userNotExist();
+		}
+	}
+
+	/**
+	 * 根据用户 ID 获取用户
+	 * @param id
+	 * @returns
+	 */
+	async getUserById(id: number) {
+		return await this.userRepository.findOne({
+			where: {
+				id,
+			},
+		});
+	}
+
+	/**
 	 * 根据用户名获取用户
 	 * @param userName
 	 * @returns
@@ -144,7 +203,19 @@ export class UserService {
 			},
 		});
 		if (user) {
-			return getUserInfo(user);
+			if (user.freezeDate) {
+				const { ClientRefuseError, getDescription } =
+					Launcher.ResponseCode;
+				throw new HttpException(
+					{
+						message: `${getDescription(ClientRefuseError)}，该用户被冻结`,
+						statusCode: ClientRefuseError,
+					},
+					ClientRefuseError
+				);
+			} else {
+				return getUserInfo(user);
+			}
 		} else {
 			const { ClientNotFoundError, getDescription } =
 				Launcher.ResponseCode;
