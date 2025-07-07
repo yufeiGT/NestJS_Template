@@ -1,8 +1,9 @@
-import { HttpException, Inject, Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { Launcher } from '@~crazy/launcher';
+import { Launcher } from '@gluttons/launcher';
 
+import { ResponseError } from 'src/Entity/error';
 import { UserAuthInfoDto } from 'src/Auth/dto';
 import { UserService } from 'src/Module/User/services';
 
@@ -25,33 +26,19 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 				return payload;
 			} catch (err) {
 				if (err instanceof HttpException) {
-					throw new HttpException(
-						{
-							data: null,
-							code: err.getStatus(),
-							message: err.message,
-							dateTime: Date.now(),
-						},
-						Success
-					);
+					throw err;
 				} else {
-					const res: Launcher.Response<typeof err> = {
-						data: err.response.data || null,
+					new ResponseError({
+						data: err?.response?.data || null,
 						code: ClientProhibitError,
-						message: getDescription(ClientProhibitError),
-						dateTime: Date.now(),
-					};
-					throw new HttpException(res, Success);
+					}).thorwError();
 				}
 			}
 		} else {
-			const res: Launcher.Response<null> = {
+			new ResponseError({
 				data: null,
 				code: ClientProhibitError,
-				message: getDescription(ClientProhibitError),
-				dateTime: Date.now(),
-			};
-			throw new HttpException(res, Success);
+			}).thorwError();
 		}
 	}
 }

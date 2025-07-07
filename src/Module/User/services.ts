@@ -1,11 +1,12 @@
-import { Injectable, HttpException, Inject } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
-import { IsNull, Not, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { hashSync, compareSync } from 'bcryptjs';
-import { Launcher } from '@~crazy/launcher';
+import { Launcher } from '@gluttons/launcher';
 
+import { ResponseError } from 'src/Entity/error';
 import { UserAuthInfoDto } from 'src/Auth/dto';
 
 import { User } from './entity';
@@ -59,13 +60,10 @@ export class UserService {
 		const user = await this.getUserByName(params.username);
 		if (user) {
 			const { ClientRefuseError, getDescription } = Launcher.ResponseCode;
-			throw new HttpException(
-				{
-					message: `${getDescription(ClientRefuseError)}，用户已存在`,
-					statusCode: ClientRefuseError,
-				},
-				ClientRefuseError
-			);
+			new ResponseError({
+				code: ClientRefuseError,
+				message: `${getDescription(ClientRefuseError)}，用户已存在`,
+			}).thorwError();
 		} else {
 			const salt = Number(this.configService.get<string>('SALT'));
 			let newUser = new User();
@@ -206,26 +204,20 @@ export class UserService {
 			if (user.freezeDate) {
 				const { ClientRefuseError, getDescription } =
 					Launcher.ResponseCode;
-				throw new HttpException(
-					{
-						message: `${getDescription(ClientRefuseError)}，该用户被冻结`,
-						statusCode: ClientRefuseError,
-					},
-					ClientRefuseError
-				);
+				new ResponseError({
+					code: ClientRefuseError,
+					message: `${getDescription(ClientRefuseError)}，该用户被冻结`,
+				}).thorwError();
 			} else {
 				return getUserInfo(user);
 			}
 		} else {
 			const { ClientNotFoundError, getDescription } =
 				Launcher.ResponseCode;
-			throw new HttpException(
-				{
-					message: `${getDescription(ClientNotFoundError)}，非法用户`,
-					statusCode: ClientNotFoundError,
-				},
-				ClientNotFoundError
-			);
+			new ResponseError({
+				code: ClientNotFoundError,
+				message: `${getDescription(ClientNotFoundError)}，该用户被冻结`,
+			}).thorwError();
 		}
 	}
 

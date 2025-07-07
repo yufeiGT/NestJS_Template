@@ -15,7 +15,7 @@
 		"format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\""
 	},
 	"dependencies": {
-		"@~crazy/launcher": "0.0.19",
+		"@gluttons/launcher": "0.0.2",
 		"@gluttons/spanner": "0.1.0",
 		"@nestjs/axios": "4.0.0",
 		"@nestjs/cache-manager": "3.0.1",

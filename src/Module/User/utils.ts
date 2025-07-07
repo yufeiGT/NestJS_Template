@@ -1,5 +1,6 @@
-import { HttpException } from '@nestjs/common';
-import { Launcher } from '@~crazy/launcher';
+import { Launcher } from '@gluttons/launcher';
+
+import { ResponseError } from 'src/Entity/error';
 
 import { User } from './entity';
 import { UserInfo } from './Dto/response.dto';
@@ -23,13 +24,10 @@ export function getUserInfo(user: User): UserInfo {
  */
 export function userNotExist() {
 	const { ClientNotFoundError } = Launcher.ResponseCode;
-	throw new HttpException(
-		{
-			message: `用户不存在`,
-			statusCode: ClientNotFoundError,
-		},
-		ClientNotFoundError
-	);
+	new ResponseError({
+		code: ClientNotFoundError,
+		message: `用户不存在`,
+	}).thorwError();
 }
 
 /**
@@ -37,11 +35,8 @@ export function userNotExist() {
  */
 export function userPasswordError() {
 	const { ClientRefuseError, getDescription } = Launcher.ResponseCode;
-	throw new HttpException(
-		{
-			message: `${getDescription(ClientRefuseError)}，密码错误`,
-			statusCode: ClientRefuseError,
-		},
-		ClientRefuseError
-	);
+	new ResponseError({
+		code: ClientRefuseError,
+		message: `${getDescription(ClientRefuseError)}，密码错误`,
+	}).thorwError();
 }

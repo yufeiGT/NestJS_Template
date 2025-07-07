@@ -1,4 +1,4 @@
-import { Launcher } from '@~crazy/launcher';
+import { Launcher } from '@gluttons/launcher';
 
 /**
  * 分页数据
@@ -12,5 +12,5 @@ export class PaginationData<T> {
 	}
 
 	data: T;
-	pagination: Launcher.Pagination;
+	pagination: Launcher.PaginationResponse;
 }

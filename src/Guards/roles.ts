@@ -1,14 +1,15 @@
 import {
 	CanActivate,
 	ExecutionContext,
-	HttpException,
 	Inject,
 	Injectable,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
-import { Launcher } from '@~crazy/launcher';
+import { Launcher } from '@gluttons/launcher';
 
+import { ResponseData } from 'src/Interface/response';
+import { ResponseError } from 'src/Entity/error';
 import { UserAuthInfoDto } from 'src/Auth/dto';
 import { ROLES_KEY, ROLE_TYPE } from 'src/Decorators/roles';
 import { UserService } from 'src/Module/User/services';
@@ -40,15 +41,13 @@ export class RolesGuard implements CanActivate {
 				) {
 					return true;
 				} else {
-					const { Success, ClientRefuseError, getDescription } =
+					const { ClientRefuseError, getDescription } =
 						Launcher.ResponseCode;
-					const res: Launcher.Response<typeof request.user> = {
+					new ResponseError({
 						data: null,
 						code: ClientRefuseError,
 						message: `${getDescription(ClientRefuseError)}，该用户没有权限`,
-						dateTime: Date.now(),
-					};
-					throw new HttpException(res, Success);
+					}).thorwError();
 				}
 			} else {
 				userNotExist();

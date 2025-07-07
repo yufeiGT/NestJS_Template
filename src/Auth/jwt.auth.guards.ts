@@ -1,12 +1,13 @@
 import {
 	Injectable,
 	ExecutionContext,
-	HttpException,
 	Inject,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Reflector } from '@nestjs/core';
-import { Launcher } from '@~crazy/launcher';
+import { Launcher } from '@gluttons/launcher';
+
+import { ResponseError } from 'src/Entity/error';
 
 import { IS_PUBLIC_KEY } from './public';
 
@@ -32,22 +33,13 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
 	}
 
 	handleRequest(err, user, info) {
-		const {
-			Success,
-			ClientUnauthorizedError,
-			getDescription,
-		} = Launcher.ResponseCode;
 		if (err || !user) {
 			if (err) {
 				throw err;
 			} else {
-				const res: Launcher.Response<null> = {
-					data: null,
-					code: ClientUnauthorizedError,
-					message: getDescription(ClientUnauthorizedError),
-					dateTime: Date.now(),
-				};
-				throw new HttpException(res, Success);
+				new ResponseError<null>({
+					code: Launcher.ResponseCode.ClientUnauthorizedError,
+				}).thorwError();
 			}
 		}
 		return user;

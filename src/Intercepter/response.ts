@@ -6,21 +6,22 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Launcher } from '@~crazy/launcher';
+import { Launcher } from '@gluttons/launcher';
 
-import { PaginationData } from '../Entity/paginationData';
+import { ResponseData } from 'src/Interface/response';
+import { PaginationData } from 'src/Entity/paginationData';
 
 /**
  * 响应拦截器
  */
 @Injectable()
 export class ResponseIntercepter<T>
-	implements NestInterceptor<T, Launcher.Response<T>>
+	implements NestInterceptor<T, ResponseData<T>>
 {
 	intercept(
 		context: ExecutionContext,
 		next: CallHandler<T>
-	): Observable<Launcher.Response<T>> {
+	): Observable<ResponseData<T>> {
 		next.handle();
 		return next.handle().pipe(
 			map((data) => {
@@ -28,13 +29,13 @@ export class ResponseIntercepter<T>
 				const message = Launcher.ResponseCode.getDescription(
 					Launcher.ResponseCode.Success
 				);
-				const dateTime = Date.now();
+				const timestamp = Date.now();
 				if (data instanceof PaginationData) {
 					return {
 						data: data.data,
 						code,
 						message,
-						dateTime,
+						timestamp,
 						pagination: data.pagination,
 					};
 				} else {
@@ -42,8 +43,8 @@ export class ResponseIntercepter<T>
 						data,
 						code,
 						message,
-						dateTime,
-					} as Launcher.Response<T>;
+						timestamp,
+					} as ResponseData<T>;
 				}
 			})
 		);
