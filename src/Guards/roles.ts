@@ -9,7 +9,7 @@ import { Request } from 'express';
 import { Launcher } from '@gluttons/launcher';
 
 import { ResponseData } from 'src/Interface/response';
-import { ResponseError } from 'src/Entity/error';
+import { ResponseError } from 'src/Entity/response.error';
 import { UserAuthInfoDto } from 'src/Auth/dto';
 import { ROLES_KEY, ROLE_TYPE } from 'src/Decorators/roles';
 import { UserService } from 'src/Module/User/services';

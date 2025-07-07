@@ -6,7 +6,7 @@ import { Repository } from 'typeorm';
 import { hashSync, compareSync } from 'bcryptjs';
 import { Launcher } from '@gluttons/launcher';
 
-import { ResponseError } from 'src/Entity/error';
+import { ResponseError } from 'src/Entity/response.error';
 import { UserAuthInfoDto } from 'src/Auth/dto';
 
 import { User } from './entity';

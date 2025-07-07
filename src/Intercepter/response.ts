@@ -9,7 +9,7 @@ import { map } from 'rxjs/operators';
 import { Launcher } from '@gluttons/launcher';
 
 import { ResponseData } from 'src/Interface/response';
-import { PaginationData } from 'src/Entity/paginationData';
+import { PaginationData } from 'src/Entity/pagination.data';
 
 /**
  * 响应拦截器

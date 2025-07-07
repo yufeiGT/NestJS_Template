@@ -3,7 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { Launcher } from '@gluttons/launcher';
 
-import { ResponseError } from 'src/Entity/error';
+import { ResponseError } from 'src/Entity/response.error';
 import { UserAuthInfoDto } from 'src/Auth/dto';
 import { UserService } from 'src/Module/User/services';
 

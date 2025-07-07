@@ -1,6 +1,6 @@
 import { Launcher } from '@gluttons/launcher';
 
-import { ResponseError } from 'src/Entity/error';
+import { ResponseError } from 'src/Entity/response.error';
 
 import { User } from './entity';
 import { UserInfo } from './Dto/response.dto';

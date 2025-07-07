@@ -7,7 +7,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { Reflector } from '@nestjs/core';
 import { Launcher } from '@gluttons/launcher';
 
-import { ResponseError } from 'src/Entity/error';
+import { ResponseError } from 'src/Entity/response.error';
 
 import { IS_PUBLIC_KEY } from './public';
 

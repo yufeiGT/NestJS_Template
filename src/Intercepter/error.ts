@@ -9,7 +9,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { ResponseData } from 'src/Interface/response';
-import { ResponseError } from 'src/Entity/error';
+import { ResponseError } from 'src/Entity/response.error';
 
 @Injectable()
 export class ErrorsInterceptor<T>

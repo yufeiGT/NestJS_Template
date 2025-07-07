@@ -14,15 +14,15 @@ import { User } from './entity';
  */
 @Module({
 	imports: [
-		HttpModule,
 		NestjsFormDataModule.config({
 			storage: MemoryStoredFile,
 		}),
 		TypeOrmModule.forFeature([User]),
+		HttpModule,
 	],
 	controllers: [UserController],
 	providers: [UserService],
-	exports: [UserService, HttpModule],
+	exports: [HttpModule, UserService],
 })
 export class UserModule implements NestModule {
 	configure(consumer: MiddlewareConsumer) {
